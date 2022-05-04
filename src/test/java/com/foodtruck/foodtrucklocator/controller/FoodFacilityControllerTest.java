@@ -1,7 +1,7 @@
 package com.foodtruck.foodtrucklocator.controller;
 
 import com.foodtruck.foodtrucklocator.model.response.FoodFacilityApiResponse;
-import com.foodtruck.foodtrucklocator.service.IFoodFacilitySearchSearch;
+import com.foodtruck.foodtrucklocator.service.IFoodFacilitySearchService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ class FoodFacilityControllerTest {
 
 
     @MockBean
-    IFoodFacilitySearchSearch foodFacilitySearchSearch;
+    IFoodFacilitySearchService foodFacilitySearchSearch;
 
     @Test
     void Should_Get_FoodFacility_By_Name() throws Exception {

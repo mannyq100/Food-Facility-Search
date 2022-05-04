@@ -14,7 +14,7 @@ import java.util.PriorityQueue;
 
 @Service
 @Slf4j
-public class FoodFacilitySearchService implements IFoodFacilitySearchSearch {
+public class FoodFacilitySearchServiceService implements IFoodFacilitySearchService {
 
     PriorityQueue<FoodFacilityApiResponse> foodFacilityApiResponsesSortedByDistance =
             new PriorityQueue<>((first, second) -> Double.compare(first.getDistanceInMiles(), second.getDistanceInMiles()));
@@ -73,7 +73,7 @@ public class FoodFacilitySearchService implements IFoodFacilitySearchSearch {
             log.error("Invalid search name provided");
             return null;
         }
-        log.info("Searching for Food Facility that matches ", name);
+        log.info("Searching for Food Facility that matches {}", name);
         return DataStore.getFoodFacilityList().parallelStream().
                 filter(fc -> fc.getFoodFacilityName().equalsIgnoreCase(name))
                 .map(this::mapToApiResponse)

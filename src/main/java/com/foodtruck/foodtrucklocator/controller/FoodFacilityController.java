@@ -1,7 +1,7 @@
 package com.foodtruck.foodtrucklocator.controller;
 
 import com.foodtruck.foodtrucklocator.model.response.FoodFacilityApiResponse;
-import com.foodtruck.foodtrucklocator.service.IFoodFacilitySearchSearch;
+import com.foodtruck.foodtrucklocator.service.IFoodFacilitySearchService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FoodFacilityController {
 
-    private final IFoodFacilitySearchSearch foodFacilitySearchSearch;
+    private final IFoodFacilitySearchService foodFacilitySearchSearch;
     Logger logger = LoggerFactory.getLogger(FoodFacilityController.class);
 
     @GetMapping()

@@ -4,7 +4,7 @@ import com.foodtruck.foodtrucklocator.model.response.FoodFacilityApiResponse;
 
 import java.util.List;
 
-public interface IFoodFacilitySearchSearch {
+public interface IFoodFacilitySearchService {
 
     List<FoodFacilityApiResponse> getFoodFacilitiesWithinRadius(double latitude, double longitude, int radius, int limit);
 
