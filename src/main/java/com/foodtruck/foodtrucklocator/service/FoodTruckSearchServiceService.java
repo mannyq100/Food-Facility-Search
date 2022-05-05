@@ -11,6 +11,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -56,7 +57,7 @@ public class FoodTruckSearchServiceService implements IFoodTruckSearchService {
 
     private FoodTruckApiResponse mapToApiResponse(FoodTruck foodTruck) {
 
-        log.info("DTO conversion. FoodTruck object -> FoodTruckApiResponse object");
+        log.debug("DTO conversion. FoodTruck object -> FoodTruckApiResponse object");
         return FoodTruckApiResponse.builder()
                 .foodTruckName(foodTruck.getFoodTruckName())
                 .menu(foodTruck.getMenu())
@@ -67,7 +68,7 @@ public class FoodTruckSearchServiceService implements IFoodTruckSearchService {
     }
 
     @Override
-    public FoodTruckApiResponse getFoodTruckByName(String name) {
+    public List<FoodTruckApiResponse> getFoodTruckByName(String name) {
 
         if (ObjectUtils.isEmpty(name)) {
             log.error("Invalid search name provided");
@@ -77,6 +78,7 @@ public class FoodTruckSearchServiceService implements IFoodTruckSearchService {
         return DataStore.getFOOD_TRUCK_LIST().parallelStream().
                 filter(foodTruck -> foodTruck.getFoodTruckName().equalsIgnoreCase(name))
                 .map(this::mapToApiResponse)
-                .findFirst().orElseGet(() -> null);
+                .limit(3)
+                .collect(Collectors.toList());
     }
 }
