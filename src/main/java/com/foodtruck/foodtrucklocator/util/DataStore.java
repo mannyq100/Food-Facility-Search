@@ -56,6 +56,7 @@ public class DataStore {
                             .operationDaysHours(fields[17])
                             .build();
                 }).forEach(DataStore::addFoodTruck);
+        log.info("Finished loading dataset");
     }
 
     private boolean hasRequiredFields(String[] fields) {

@@ -9,7 +9,7 @@ public class DistanceCalculator {
 
     //Source: https://www.geodatasource.com/developers/java
     public static double getDistance(double lat1, double lon1, double lat2, double lon2, String unit) {
-        log.info("Calculating distance");
+        log.debug("Calculating distance");
         if ((lat1 == lat2) && (lon1 == lon2)) {
             return 0;
         } else {
@@ -23,7 +23,7 @@ public class DistanceCalculator {
             } else if (unit.equals("N")) {
                 dist = dist * 0.8684;
             }
-            log.info("Finished distance calculation");
+            log.debug("Finished distance calculation");
             return Math.round(dist * 100.0) / 100.0;
         }
     }
