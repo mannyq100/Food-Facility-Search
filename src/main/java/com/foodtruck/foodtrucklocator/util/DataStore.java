@@ -1,6 +1,6 @@
 package com.foodtruck.foodtrucklocator.util;
 
-import com.foodtruck.foodtrucklocator.model.FoodFacility;
+import com.foodtruck.foodtrucklocator.model.FoodTruck;
 import com.foodtruck.foodtrucklocator.model.Location;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +18,14 @@ import java.util.List;
 @UtilityClass
 public class DataStore {
 
-    private static final List<FoodFacility> foodFacilityList = new ArrayList<>();
+    private static final List<FoodTruck> FOOD_TRUCK_LIST = new ArrayList<>();
 
-    public static void addFoodVendor(FoodFacility foodFacility) {
-        foodFacilityList.add(foodFacility);
+    public static void addFoodTruck(FoodTruck foodTruck) {
+        FOOD_TRUCK_LIST.add(foodTruck);
     }
 
-    public static List<FoodFacility> getFoodFacilityList() {
-        return foodFacilityList;
+    public static List<FoodTruck> getFOOD_TRUCK_LIST() {
+        return FOOD_TRUCK_LIST;
     }
 
     public void loadData() throws IOException {
@@ -48,14 +48,14 @@ public class DataStore {
 
                     List<String> foodItems = Arrays.asList(fields[11].split(":"));
 
-                    return FoodFacility.builder()
-                            .foodFacilityName(fields[1])
+                    return FoodTruck.builder()
+                            .foodTruckName(fields[1])
                             .facilityType(fields[2])
                             .menu(foodItems)
                             .location(location)
                             .operationDaysHours(fields[17])
                             .build();
-                }).forEach(DataStore::addFoodVendor);
+                }).forEach(DataStore::addFoodTruck);
     }
 
     private boolean hasRequiredFields(String[] fields) {
