@@ -8,21 +8,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class FoodTruckSearchServiceService implements IFoodTruckSearchService {
 
     PriorityQueue<FoodTruckApiResponse> foodTruckApiResponsesSortedByDistance =
-            new PriorityQueue<>((first, second) -> Double.compare(first.getDistanceInMiles(), second.getDistanceInMiles()));
+            new PriorityQueue<>((first, second) -> Double.compare(second.getDistanceInMiles(), first.getDistanceInMiles()));
+
+    private int searchLimit;
 
     @Override
     public List<FoodTruckApiResponse> getFoodTruckWithinRadius(double latitude, double longitude, int radius, int limit) {
         log.info("Searching for Food Trucks. Latitude: {} Longitude: {} Radius: {} SearchLimit: {}",
                 latitude, longitude, radius, limit);
+        this.searchLimit = limit;
         DataStore.getFOOD_TRUCK_LIST().parallelStream()
                 .filter(foodTruck -> foodTruck.getFacilityType().equalsIgnoreCase("truck"))
                 .map(foodTruck -> {
@@ -35,18 +39,33 @@ public class FoodTruckSearchServiceService implements IFoodTruckSearchService {
 
                 })
                 .filter(foodTruckApiResponseWithDistance -> foodTruckApiResponseWithDistance.getDistanceInMiles() <= radius)
-                .forEach(foodTruckApiResponseWithDistance -> foodTruckApiResponsesSortedByDistance.add(foodTruckApiResponseWithDistance));
+                .forEach(this::addToFoodTruckApiResponsesSortedByDistance);
 
         return getUpToLimitResponse(limit);
 
 
     }
 
+    private void addToFoodTruckApiResponsesSortedByDistance(FoodTruckApiResponse foodTruckApiResponse) {
+        if (searchLimit > 0) {
+            foodTruckApiResponsesSortedByDistance.add(foodTruckApiResponse);
+            searchLimit--;
+        } else {
+            if (foodTruckApiResponse.getDistanceInMiles() <= foodTruckApiResponsesSortedByDistance.peek().getDistanceInMiles()) {
+                foodTruckApiResponsesSortedByDistance.poll();
+                foodTruckApiResponsesSortedByDistance.offer(foodTruckApiResponse);
+            }
+        }
+    }
+
 
     private List<FoodTruckApiResponse> getUpToLimitResponse(int limit) {
-        List<FoodTruckApiResponse> result = new ArrayList<>();
+        LinkedList<FoodTruckApiResponse> result = new LinkedList<>();
+        while (foodTruckApiResponsesSortedByDistance.size() > limit) {
+            foodTruckApiResponsesSortedByDistance.poll();
+        }
         while (!foodTruckApiResponsesSortedByDistance.isEmpty() && limit > 0) {
-            result.add(foodTruckApiResponsesSortedByDistance.poll());
+            result.addFirst(foodTruckApiResponsesSortedByDistance.poll());
             limit--;
         }
         log.info("Returning search result. Size = {}", result.size());
@@ -56,7 +75,7 @@ public class FoodTruckSearchServiceService implements IFoodTruckSearchService {
 
     private FoodTruckApiResponse mapToApiResponse(FoodTruck foodTruck) {
 
-        log.info("DTO conversion. FoodTruck object -> FoodTruckApiResponse object");
+        log.debug("DTO conversion. FoodTruck object -> FoodTruckApiResponse object");
         return FoodTruckApiResponse.builder()
                 .foodTruckName(foodTruck.getFoodTruckName())
                 .menu(foodTruck.getMenu())
@@ -67,7 +86,7 @@ public class FoodTruckSearchServiceService implements IFoodTruckSearchService {
     }
 
     @Override
-    public FoodTruckApiResponse getFoodTruckByName(String name) {
+    public List<FoodTruckApiResponse> getFoodTruckByName(String name) {
 
         if (ObjectUtils.isEmpty(name)) {
             log.error("Invalid search name provided");
@@ -75,8 +94,9 @@ public class FoodTruckSearchServiceService implements IFoodTruckSearchService {
         }
         log.info("Searching for Food Truck that matches {}", name);
         return DataStore.getFOOD_TRUCK_LIST().parallelStream().
-                filter(foodTruck -> foodTruck.getFoodTruckName().equalsIgnoreCase(name))
+                filter(foodTruck -> foodTruck.getFoodTruckName().toLowerCase().contains(name.toLowerCase()))
                 .map(this::mapToApiResponse)
-                .findFirst().orElseGet(() -> null);
+                .limit(3)
+                .collect(Collectors.toList());
     }
 }

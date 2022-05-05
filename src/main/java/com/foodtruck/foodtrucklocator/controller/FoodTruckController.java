@@ -37,8 +37,8 @@ public class FoodTruckController {
     @GetMapping("/name")
     public ResponseEntity<Object> getFoodTruckByName(@RequestParam(name = "FoodTruckName") String name) {
         logger.info("Request received to search Food Truck by name: {}", name);
-        FoodTruckApiResponse foodTruckByName = foodTruckSearchService.getFoodTruckByName(name);
-        if (foodTruckByName == null) {
+        List<FoodTruckApiResponse> foodTruckByName = foodTruckSearchService.getFoodTruckByName(name);
+        if (foodTruckByName.isEmpty()) {
             logger.error("No Food Truck found for search term {} ", name);
             return new ResponseEntity<>("No Food Truck match for provided name", HttpStatus.NOT_FOUND);
         }

@@ -8,5 +8,5 @@ public interface IFoodTruckSearchService {
 
     List<FoodTruckApiResponse> getFoodTruckWithinRadius(double latitude, double longitude, int radius, int limit);
 
-    FoodTruckApiResponse getFoodTruckByName(String name);
+    List<FoodTruckApiResponse> getFoodTruckByName(String name);
 }
