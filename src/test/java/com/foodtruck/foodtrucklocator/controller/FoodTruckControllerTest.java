@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,11 +30,11 @@ class FoodTruckControllerTest {
     @Test
     void Should_Get_FoodTruck_By_Name() throws Exception {
 
-        var testFoodApiResponse = FoodTruckApiResponse.builder()
+        var testFoodApiResponse = List.of(FoodTruckApiResponse.builder()
                 .foodTruckName("Casita Vegana")
                 .menu(Arrays.asList("testMenuItem1", "testMenuItem2"))
-                .streetAddress("testStreetAddress").build();
-        var testFoodFacilityName = "Casita Vegana";
+                .streetAddress("testStreetAddress").build());
+        var testFoodFacilityName = ("Casita Vegana");
 
         Mockito.when(foodFacilitySearchSearch.getFoodTruckByName(testFoodFacilityName))
                 .thenReturn(testFoodApiResponse);
@@ -42,7 +43,7 @@ class FoodTruckControllerTest {
                         .param("FoodTruckName", testFoodFacilityName))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.foodTruckName").value(testFoodFacilityName));
+                .andExpect(jsonPath("$[0].foodTruckName").value(testFoodFacilityName));
 
     }
 }
