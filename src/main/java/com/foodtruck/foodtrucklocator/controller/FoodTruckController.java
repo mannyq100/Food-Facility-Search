@@ -23,8 +23,8 @@ public class FoodTruckController {
     Logger logger = LoggerFactory.getLogger(FoodTruckController.class);
 
     @GetMapping()
-    public ResponseEntity<List<FoodTruckApiResponse>> getFoodTrucksNearby(@RequestParam(name = "Latitude") double lat,
-                                                                          @RequestParam(name = "Longitude") double log,
+    public ResponseEntity<List<FoodTruckApiResponse>> getFoodTrucksNearby(@RequestParam(name = "Latitude", defaultValue = "37.776581") double lat,
+                                                                          @RequestParam(name = "Longitude", defaultValue = "-122.391884") double log,
                                                                           @RequestParam(defaultValue = "5") int radius,
                                                                           @RequestParam(defaultValue = "5") int searchLimit) {
         logger.info("Request received to search Food Trucks within {} radius", radius);
