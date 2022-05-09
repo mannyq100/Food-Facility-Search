@@ -13,10 +13,14 @@ Restful API that returns a list of Food Trucks in the San Francisco Area. Food F
 - Gradle
 
 ### Starting Application:
-Must have Java-11 or higher installed. Clone or Download this repository to your local machine.
-This application can be run in any Java IDE or using Gradle :
+To run locally, you must have Java-11 or higher installed. Clone or Download this repository to your local machine and run in any 
+ Java IDE or using Gradle :
 - `./gradlew clean build`
 - `./gradlew bootRun`
+
+Alternatively, you can run this on docker using:
+- `./gradlew bootBuildImage --imageName=<my-food-truck-image>`
+-  `docker run -p 8080:8080 -t <my-food-truck-image>`
 
 The application runs on embedded tomcat server `port 8080` by default.
 
