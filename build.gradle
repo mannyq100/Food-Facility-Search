@@ -18,6 +18,14 @@ repositories {
 	mavenCentral()
 }
 
+maven {
+    url 'https://pkgs.dev.azure.com/EmmanuelQuist/_packaging/EmmanuelQuist/maven/v1'
+    name 'EmmanuelQuist'
+    authentication {
+        basic(BasicAuthentication)
+    }
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.8'
